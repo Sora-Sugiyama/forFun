@@ -28,38 +28,41 @@ void printCurrent(){
     std::cout<<BLANK<<FLOOR<<std::endl;
 }
 
-int dHeight[25];
+bool broke[25];
 int checkLine(){
-    dHeight[21]=0;
     int cnt=0;
+    memset(broke,false,sizeof(broke));
     for(int i=20;i>0;i--){
-        dHeight[i]=dHeight[i+1];
         bool flag=true;
         for(int j=1;j<=10;j++){
             flag&=MAP[i][j];
         }
         if(flag){
             cnt++;
-            dHeight[i]++;
+            broke[i]=true;
         }
     }
     
     for(int i=20;i>0;i--){
+        int idx=i;
+        while(broke[idx])idx--;
         for(int j=1;j<=10;j++){
-            if(i-dHeight[i]<=0)MAP[i][j]=false;
-            else MAP[i][j]=MAP[i-dHeight[i]][j];
+            if(idx==0)MAP[i][j]=false;
+            else MAP[i][j]=MAP[idx][j];
         }
+        if(idx>0)broke[idx]=true;
     }
     return cnt;
 }
 
 std::random_device rd;
+std::mt19937 gen(rd());
 
 class block{
     u8 blockNum,x,y;
 public:
     bool makeBlock(){
-        blockNum=rd()%14;
+        blockNum=gen()%14;
         x=1;
         y=3;
         for(int i=x;i<x+blockSize[blockNum].first;i++){
@@ -185,7 +188,7 @@ int main(int argc, const char * argv[]) {
             BLOCK.printToMap();
             numDeletedLines+=checkLine();
             if(!BLOCK.makeBlock()){
-                std::cout<<"🔥 GAME OVER 🔥\n🚜 Number of Delete Lines: "<<numDeletedLines<<std::endl;
+                std::cout<<"🔥 GAME OVER 🔥\n🚜 Number of Deleted Lines: "<<numDeletedLines<<std::endl;
                 break;
             }
         }
