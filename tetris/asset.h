@@ -11,6 +11,7 @@
 #include <utility>
 #include <cstddef>
 #include <cstdint>
+#include <string>
 
 using u8=uint8_t;
 
@@ -100,6 +101,15 @@ constexpr std::pair<u8,u8> blockSize[]={
     {2,3},{3,2},{2,3},{3,2},
     {2,3},{3,2},
     {2,3},{3,2}
+};
+
+constexpr std::string_view icon[]={
+    "🟥","🟥",
+    "🟧","🟧","🟧","🟧",
+    "🟦",
+    "🟩","🟩","🟩","🟩",
+    "🟪","🟪",
+    "🟨","🟨"
 };
 
 #endif /* asset_h */
