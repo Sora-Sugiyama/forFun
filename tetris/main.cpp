@@ -13,15 +13,16 @@
 #include "asset.h"
 
 constexpr std::string_view BLANK="     ",FLOOR="🟧🧑🏽‍🌾🧑🏽‍🌾🧑🏽‍🌾🧑🏽‍🌾🧑🏽‍🌾🧑🏽‍🌾🧑🏽‍🌾🧑🏽‍🌾🧑🏽‍🌾🧑🏽‍🌾🟧";
-bool MAP[25][15];
+int MAP[25][15];
+std::string_view ICON="😀";
 void printCurrent(){
     std::cout<<"\033[2J\033[H";
     
     for(int i=1;i<=20;i++){
         std::cout<<BLANK<<"🍂";
         for(int j=1;j<=10;j++){
-            if(MAP[i][j])std::cout<<"🥕";
-            else std::cout<<"🍃";
+            if(MAP[i][j])std::cout<<icon[MAP[i][j]-1];
+            else std::cout<<"⬜️";
         }
         std::cout<<"🍂\n";
     }
@@ -35,7 +36,7 @@ int checkLine(){
     for(int i=20;i>0;i--){
         bool flag=true;
         for(int j=1;j<=10;j++){
-            flag&=MAP[i][j];
+            flag&=bool(MAP[i][j]);
         }
         if(flag){
             cnt++;
@@ -47,7 +48,7 @@ int checkLine(){
         int idx=i;
         while(broke[idx])idx--;
         for(int j=1;j<=10;j++){
-            if(idx==0)MAP[i][j]=false;
+            if(idx==0)MAP[i][j]=0;
             else MAP[i][j]=MAP[idx][j];
         }
         if(idx>0)broke[idx]=true;
@@ -61,10 +62,13 @@ std::mt19937 gen(rd());
 class block{
     u8 blockNum,x,y;
 public:
+    
+    
     bool makeBlock(){
         blockNum=gen()%14;
         x=1;
         y=3;
+        ICON=icon[blockNum];
         for(int i=x;i<x+blockSize[blockNum].first;i++){
             for(int j=y;j<y+blockSize[blockNum].second;j++){
                 if(MAP[i][j]&&blocks[blockNum][i-x][j-y])return false;
@@ -76,7 +80,7 @@ public:
     void printToMap(){
         for(int i=x;i<x+blockSize[blockNum].first;i++){
             for(int j=y;j<y+blockSize[blockNum].second;j++){
-                MAP[i][j]|=blocks[blockNum][i-x][j-y];
+                if(blocks[blockNum][i-x][j-y])MAP[i][j]=blockNum+1;
             }
         }
     }
