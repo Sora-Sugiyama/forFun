@@ -57,7 +57,6 @@ int checkLine(){
 }
 
 std::random_device rd;
-std::mt19937 gen(rd());
 
 class block{
     u8 blockNum,x,y;
@@ -65,7 +64,7 @@ public:
     
     
     bool makeBlock(){
-        blockNum=gen()%14;
+        blockNum=rd()%19;
         x=1;
         y=3;
         ICON=icon[blockNum];
