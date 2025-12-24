@@ -64,7 +64,7 @@ public:
     
     
     bool makeBlock(){
-        blockNum=rd()%19;
+        blockNum=blockMapper[rd()%28];
         x=1;
         y=3;
         ICON=icon[blockNum];
